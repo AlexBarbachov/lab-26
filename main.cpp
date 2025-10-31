@@ -29,6 +29,10 @@ int main() {
     vector<string> lines = read_file("codes.txt");
 
     // times = [num races][operation][containers]
+
+    // numRaces = trial number
+    // operation -> 4 race types -> read,sort,insert,delete
+    // container -> vector, list, set
     long long times[numRaces][4][3];
 
   
@@ -44,7 +48,7 @@ int main() {
             v.push_back(lines[i]);
         }
         clock_t end = clock();
-        times[0][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][0][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     // list!!
@@ -56,7 +60,7 @@ int main() {
             l.push_back(lines[i]);
             
         clock_t end = clock();
-        times[0][1] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][0][1] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     // set!!
@@ -68,7 +72,7 @@ int main() {
             s.insert(lines[i]);
             
         clock_t end = clock();
-        times[0][2] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][0][2] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
 
@@ -78,7 +82,7 @@ int main() {
         clock_t start = clock();
         sort(v.begin(), v.end());
         clock_t end = clock();
-        times[1][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][1][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     {
@@ -86,11 +90,11 @@ int main() {
         clock_t start = clock();
         l.sort();
         clock_t end = clock();
-        times[1][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][1][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     {
-        times[1][2] = -1; // set is alr sorted
+        times[i][1][2] = -1; // set is alr sorted
     }
 
 
@@ -101,7 +105,7 @@ int main() {
 
         v.insert(v.begin() + v.size()/2, "abc");
         clock_t end = clock();
-        times[2][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][2][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     {
@@ -113,7 +117,7 @@ int main() {
         for (size_t i = 0; i < l.size()/2; ++i) ++it;
         l.insert(it, "TESTCODE");
         clock_t end = clock();
-        times[2][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][2][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
         
     }
 
@@ -122,7 +126,7 @@ int main() {
         clock_t start = clock();
         s.insert("TESTCODE");
         clock_t end = clock();
-        times[2][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][2][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     // ********************* RACE 4 *************************
@@ -131,7 +135,7 @@ int main() {
         clock_t start = clock();
         v.erase(v.begin() + v.size()/2);
         clock_t end = clock();
-        times[3][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][3][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     {
@@ -162,12 +166,19 @@ int main() {
     cout << left << setw(12) << "Operation" << setw(12) << "Vector" << setw(12) << "List" << setw(12) << "Set" << endl;
 
     const char* names[4] = {"Read", "Sort", "Insert", "Delete"};
+
+    // triple loop to get each value averaged
     for (int i = 0; i < 4; i++)
     {
         cout << left << setw(12) << names[i];
         for (int j = 0; j < 3; j++)
         {
-            cout << setw(12) << times[i][j];
+            long long total = 0;
+            for (int k = 0; k < numRaces; k++)
+            {
+                total += times[k][i][j]; // find the sum of all times for the specific race and container
+            }
+            cout << setw(12) << total / numRaces; // avg time and output it
         }
         cout << endl;
     }
