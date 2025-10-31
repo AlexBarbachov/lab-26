@@ -24,14 +24,18 @@ vector<string> read_file(const string& filename)
 
 int main() {
     const int numStuff = 20000;
+    const int numRaces = 15;
+
     vector<string> lines = read_file("codes.txt");
 
-    // 3 containers and 4 racers -> 4 by 3 array
-    long long times[4][3];
+    // times = [num races][operation][containers]
+    long long times[numRaces][4][3];
 
   
     // ********************* RACE 1 *************************
     // vector!!
+    for (int i = 0; i < numRaces; i++)
+    {
     {
         clock_t start = clock();
         vector<string> v;
@@ -138,7 +142,7 @@ int main() {
 
         l.erase(it);
         clock_t end = clock();
-        times[3][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][3][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
 
     {
@@ -149,8 +153,9 @@ int main() {
 
         s.erase(it);
         clock_t end = clock();
-        times[3][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        times[i][3][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
     }
+}
 
 
     // output
