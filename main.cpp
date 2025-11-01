@@ -37,136 +37,142 @@ int main() {
     long long times[numRaces][4][3];
 
   
-    // ********************* RACE 1 *************************
-    // vector!!
+
+
+    // populate our 3D array by looping through the tests 15 times.
     for (int i = 0; i < numRaces; i++)
     {
-    {
-        clock_t start = clock();
-        vector<string> v;
-        for (size_t i = 0; i < lines.size(); i++)
+        // ********************* RACE 1 *************************
+        // vector!!
         {
-            v.push_back(lines[i]);
+            clock_t start = clock();
+            vector<string> v;
+            for (size_t i = 0; i < lines.size(); i++)
+            {
+                v.push_back(lines[i]);
+            }
+            clock_t end = clock();
+            times[i][0][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
         }
-        clock_t end = clock();
-        times[i][0][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
 
-    // list!!
-    {
-        clock_t start = clock();
-        list<string> l;
+        // list!!
+        {
+            clock_t start = clock();
+            list<string> l;
 
-        for (size_t i = 0; i < lines.size(); i++)
-            l.push_back(lines[i]);
+            for (size_t i = 0; i < lines.size(); i++)
+                l.push_back(lines[i]);
+                
+            clock_t end = clock();
+            times[i][0][1] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        // set!!
+        {
+            clock_t start = clock();
+            set<string> s;
+
+            for (size_t i = 0; i < lines.size(); i++)
+                s.insert(lines[i]);
+                
+            clock_t end = clock();
+            times[i][0][2] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+
+        // ********************* RACE 2 *************************
+        {
+            vector<string> v = lines;
+            clock_t start = clock();
+            sort(v.begin(), v.end());
+            clock_t end = clock();
+            times[i][1][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        {
+            list<string> l(lines.begin(), lines.end());
+            clock_t start = clock();
+            l.sort();
+            clock_t end = clock();
+            times[i][1][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        {
+            times[i][1][2] = -1; // set is alr sorted
+        }
+
+
+        // ********************* RACE 3 *************************
+        {
+            vector<string> v = lines;
+            clock_t start = clock();
+
+            v.insert(v.begin() + v.size()/2, "abc");
+            clock_t end = clock();
+            times[i][2][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        {
+            list<string> l(lines.begin(), lines.end());
+
+
+            clock_t start = clock();
+            list<string>::iterator it = l.begin();
+            for (size_t i = 0; i < l.size()/2; ++i) ++it;
+            l.insert(it, "TESTCODE");
+            clock_t end = clock();
+            times[i][2][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
             
-        clock_t end = clock();
-        times[i][0][1] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        {
+            set<string> s(lines.begin(), lines.end());
+            clock_t start = clock();
+            s.insert("TESTCODE");
+            clock_t end = clock();
+            times[i][2][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        // ********************* RACE 4 *************************
+        {
+            vector<string> v = lines;
+            clock_t start = clock();
+            v.erase(v.begin() + v.size()/2);
+            clock_t end = clock();
+            times[i][3][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        {
+            list<string> l(lines.begin(), lines.end());
+            list<string>::iterator it = l.begin();
+            clock_t start = clock();
+            for (size_t i = 0; i < l.size()/2; ++i) ++it;
+
+            l.erase(it);
+            clock_t end = clock();
+            times[i][3][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
+
+        {
+            set<string> s(lines.begin(), lines.end());
+            set<string>::iterator it = s.begin();
+            clock_t start = clock();
+            for (size_t i = 0; i < s.size()/2; ++i) ++it;
+
+            s.erase(it);
+            clock_t end = clock();
+            times[i][3][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
+        }
     }
-
-    // set!!
-    {
-        clock_t start = clock();
-        set<string> s;
-
-        for (size_t i = 0; i < lines.size(); i++)
-            s.insert(lines[i]);
-            
-        clock_t end = clock();
-        times[i][0][2] = (long long)(long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-
-
-    // ********************* RACE 2 *************************
-    {
-        vector<string> v = lines;
-        clock_t start = clock();
-        sort(v.begin(), v.end());
-        clock_t end = clock();
-        times[i][1][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-
-    {
-        list<string> l(lines.begin(), lines.end());
-        clock_t start = clock();
-        l.sort();
-        clock_t end = clock();
-        times[i][1][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-
-    {
-        times[i][1][2] = -1; // set is alr sorted
-    }
-
-
-    // ********************* RACE 3 *************************
-    {
-        vector<string> v = lines;
-        clock_t start = clock();
-
-        v.insert(v.begin() + v.size()/2, "abc");
-        clock_t end = clock();
-        times[i][2][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-
-    {
-        list<string> l(lines.begin(), lines.end());
-
-
-        clock_t start = clock();
-        list<string>::iterator it = l.begin();
-        for (size_t i = 0; i < l.size()/2; ++i) ++it;
-        l.insert(it, "TESTCODE");
-        clock_t end = clock();
-        times[i][2][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-        
-    }
-
-    {
-        set<string> s(lines.begin(), lines.end());
-        clock_t start = clock();
-        s.insert("TESTCODE");
-        clock_t end = clock();
-        times[i][2][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-
-    // ********************* RACE 4 *************************
-    {
-        vector<string> v = lines;
-        clock_t start = clock();
-        v.erase(v.begin() + v.size()/2);
-        clock_t end = clock();
-        times[i][3][0] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-
-    {
-        list<string> l(lines.begin(), lines.end());
-        list<string>::iterator it = l.begin();
-        clock_t start = clock();
-        for (size_t i = 0; i < l.size()/2; ++i) ++it;
-
-        l.erase(it);
-        clock_t end = clock();
-        times[i][3][1] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-
-    {
-        set<string> s(lines.begin(), lines.end());
-        set<string>::iterator it = s.begin();
-        clock_t start = clock();
-        for (size_t i = 0; i < s.size()/2; ++i) ++it;
-
-        s.erase(it);
-        clock_t end = clock();
-        times[i][3][2] = (long long)((end - start) * 1000000 / CLOCKS_PER_SEC);
-    }
-}
 
 
     // output
+    cout << "\nNumber of Simulations: " << numRaces << endl;
+
     cout << left << setw(12) << "Operation" << setw(12) << "Vector" << setw(12) << "List" << setw(12) << "Set" << endl;
 
     const char* names[4] = {"Read", "Sort", "Insert", "Delete"};
+
 
     // triple loop to get each value averaged
     for (int i = 0; i < 4; i++)
