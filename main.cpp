@@ -33,6 +33,7 @@ int main() {
     // numRaces = trial number
     // operation -> 4 race types -> read,sort,insert,delete
     // container -> vector, list, set
+    // cube slicing represnets reach individuals race's container's timing.
     long long times[numRaces][4][3];
 
   
